@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]D:\Learnings\BDD\CustomDate\CustomDate\CustomDateAcceptanceTests\bin\Debug\CustomDateAcceptanceTests.nunit</TopNode>
+  <SelectedNode>[0-1025]D:\Learnings\BDD\CustomDate\CustomDate\CustomDateAcceptanceTests\bin\Debug\nunit.mocks.dll</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]D:\Learnings\BDD\CustomDate\CustomDate\CustomDateAcceptanceTests\bin\Debug\CustomDateAcceptanceTests.nunit" Expanded="true" />
+    <Node UniqueName="[0-1023]D:\Learnings\BDD\CustomDate\CustomDate\CustomDateAcceptanceTests\bin\Debug\CustomDateAcceptanceTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1024]CustomDateAcceptanceTests" Expanded="true" />
+    <Node UniqueName="[0-1003]CustomDateAcceptanceTests.NoOfDaysInMonthFeature" Expanded="true" />
+    <Node UniqueName="[0-1001]CustomDateAcceptanceTests.YearHas12MonthsFeature" Expanded="true" />
+    <Node UniqueName="[0-1017]CustomDateAcceptanceTests.YearIsLeapFeature" Expanded="true" />
+  </Nodes>
+</VisualState>

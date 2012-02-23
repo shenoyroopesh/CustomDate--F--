@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1043]D:\Learnings\BDD\CustomDate - F#\CustomDate - F#\CustomDateAcceptanceTests\bin\Debug\CustomDateTests.dll</TopNode>
+  <SelectedNode>[0-1043]D:\Learnings\BDD\CustomDate - F#\CustomDate - F#\CustomDateAcceptanceTests\bin\Debug\CustomDateTests.dll</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1043]D:\Learnings\BDD\CustomDate - F#\CustomDate - F#\CustomDateAcceptanceTests\bin\Debug\CustomDateTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1044]CustomDateTests" Expanded="true" />
+    <Node UniqueName="[0-1022]CustomDateTests.DateDiffFeatureFeature" Expanded="true" />
+    <Node UniqueName="[0-1008]CustomDateTests.NoOfDaysInMonthFeature" Expanded="true" />
+    <Node UniqueName="[0-1045]CustomDateTests.UnitTests" Expanded="true" />
+    <Node UniqueName="[0-1034]CustomDateTests.UnitTests.DateTests" Expanded="true" />
+  </Nodes>
+</VisualState>
