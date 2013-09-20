@@ -64,28 +64,7 @@
       <DependentUpon>DifferenceBetweenTwoDates.feature</DependentUpon>
     </Compile>
     <Compile Include="FeatureSteps\DateDiffFeatureSteps.cs" />
-    <Compile Include="FeatureSteps\YearIsLeapSteps.cs" />
-    <Compile Include="FeatureSteps\MonthHasDaysCountSteps.cs" />
-    <Compile Include="FeatureSteps\YearHas12MonthsSteps.cs" />
-    <Compile Include="MonthHasDaysCount.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MonthHasDaysCount.feature</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTests\MonthTests.cs" />
-    <Compile Include="UnitTests\YearTests.cs" />
-    <Compile Include="UnitTests\DateTests.cs" />
-    <Compile Include="YearHas12Months.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>YearHas12Months.feature</DependentUpon>
-    </Compile>
-    <Compile Include="YearIsLeap.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>YearIsLeap.feature</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -93,19 +72,7 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DifferenceBetweenTwoDates.feature.cs</LastGenOutput>
     </None>
-    <None Include="MonthHasDaysCount.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>MonthHasDaysCount.feature.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
-    <None Include="YearHas12Months.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>YearHas12Months.feature.cs</LastGenOutput>
-    </None>
-    <None Include="YearIsLeap.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>YearIsLeap.feature.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CustomDate\CustomDate.fsproj">
