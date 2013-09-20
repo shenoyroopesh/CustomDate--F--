@@ -26,7 +26,7 @@ module CustomDate =
            | _ -> if monthsWith31Days.Contains month then 31 else 30
 
     let daysRemInYear date = (allMonths |> Seq.filter(fun p -> p >= date.M)
-                             |> Seq.map(dayCount date.Y) |> Seq.sum) - date.D
+                             |> Seq.map (dayCount date.Y) |> Seq.sum) - date.D
 
     let daysOverInYear date = dayCountYr date.Y - daysRemInYear date + 1
 
