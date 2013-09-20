@@ -21,7 +21,7 @@ module CustomDate =
                               Month.October;
                               Month.December ]
 
-    let allMonths = Enum.GetValues(typeof<Month>).Cast<Month>();
+    let allMonths = (Enum.GetValues typeof<Month>).Cast<Month>()
 
     let toYear ad =
         let leap = ad % 4 = 0 && (not (ad % 100 = 0) || ad % 400 = 0)
