@@ -32,11 +32,8 @@ module CustomDate =
            | Month.February -> if year.Leap then 29 else 28
            | _ -> if monthsWith31Days.Contains month then 31 else 30
 
-    let daysRemInMonth date = dayCount date.Y date.M - date.D + 1    
-
-    let daysRemInYear date = daysRemInMonth date + 
-                                 (allMonths |> Seq.filter((<) date.M)
-                                 |> Seq.map(dayCount date.Y) |> Seq.sum)
+    let daysRemInYear date = (allMonths |> Seq.filter(fun p -> p >= date.M)
+                             |> Seq.map(dayCount date.Y) |> Seq.sum) - date.D
 
     let daysOverInYear date = date.Y.dayCount - daysRemInYear date + 1
 
