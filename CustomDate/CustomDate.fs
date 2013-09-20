@@ -10,13 +10,9 @@ module CustomDate =
 
     type public Date = { Y : int; M : Month; D : int }
 
-    let monthsWith31Days = [  Month.January; 
-                              Month.March;
-                              Month.May;
-                              Month.July;
-                              Month.August;
-                              Month.October;
-                              Month.December ]
+    let monthsWith31Days = 
+        [  Month.January; Month.March; Month.May; Month.July; 
+           Month.August; Month.October; Month.December ]
 
     let allMonths = (Enum.GetValues typeof<Month>).Cast<Month>()
 
