@@ -8,9 +8,7 @@ module CustomDate =
         | June = 6 | July = 7 | August = 8 | September = 9 | October = 10 
         | November = 11 | December = 12
 
-    type public Year = { AD : int; Leap : bool; dayCount : int }
-
-    type public Date = { Y : Year; M : Month; D : int }
+    type public Date = { Y : int; M : Month; D : int }
 
     let monthsWith31Days = [  Month.January; 
                               Month.March;
@@ -22,33 +20,30 @@ module CustomDate =
 
     let allMonths = (Enum.GetValues typeof<Month>).Cast<Month>()
 
-    let toYear ad =
-        let leap = ad % 4 = 0 && (not (ad % 100 = 0) || ad % 400 = 0)
-        let dayCount = if leap then 366 else 365
-        { AD = ad; Leap = leap; dayCount = dayCount }
+    let leap yr = yr % 4 = 0 && (not (yr % 100 = 0) || yr % 400 = 0)
+
+    let dayCountYr year = if leap year then 366 else 365
 
     let dayCount year month = 
         match month with
-           | Month.February -> if year.Leap then 29 else 28
+           | Month.February -> if leap year then 29 else 28
            | _ -> if monthsWith31Days.Contains month then 31 else 30
 
     let daysRemInYear date = (allMonths |> Seq.filter(fun p -> p >= date.M)
                              |> Seq.map(dayCount date.Y) |> Seq.sum) - date.D
 
-    let daysOverInYear date = date.Y.dayCount - daysRemInYear date + 1
+    let daysOverInYear date = dayCountYr date.Y - daysRemInYear date + 1
 
-    let daysBetween y1 y2 = [y1.AD + 1 .. y2.AD - 1] 
-                            |> List.map (fun p -> (toYear p).dayCount)
-                            |> List.sum 
+    let daysBetween y1 y2 = [y1 + 1 .. y2 - 1] |> List.map (dayCountYr) |> List.sum
 
     let diffInternal d1 d2 = 
-        if d2.Y.AD <> d1.Y.AD then 
+        if d2.Y <> d1.Y then 
            daysRemInYear d1 + daysBetween d1.Y d2.Y + daysOverInYear d2 
         else if d2.M <> d1.M then 
            daysRemInYear d1 - daysRemInYear d2 + 1
         else d2.D - d1.D + 1
         
-    let toInt dt = sprintf "%i%i%i" dt.Y.AD ((int)dt.M) dt.D |> Int32.Parse
+    let toInt dt = sprintf "%i%i%i" dt.Y ((int)dt.M) dt.D |> Int32.Parse
 
     let public dateDiff d1 d2 = 
         if toInt d1 > toInt d2 then diffInternal d2 d1 else diffInternal d1 d2
@@ -56,7 +51,7 @@ module CustomDate =
     let toDate(date:String) =
         try
             let splitted = date.Split('-') |> Array.map Int32.Parse
-            let y = toYear splitted.[2]
+            let y = splitted.[2]
             let m = enum<Month> splitted.[1]
             let d =    
                if splitted.[0] > dayCount y m then raise(System.ArgumentException())
