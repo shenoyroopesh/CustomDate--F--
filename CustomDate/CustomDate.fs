@@ -4,93 +4,64 @@ module CustomDate =
     open System.Linq
     open System
 
-    type public MonthType = 
-        | January = 1
-        | February = 2
-        | March = 3
-        | April = 4
-        | May = 5
-        | June = 6
-        | July = 7
-        | August = 8
-        | September = 9
-        | October = 10
-        | November = 11
-        | December = 12
+    type public Month = 
+        | January = 1 | February = 2 | March = 3 | April = 4 | May = 5 
+        | June = 6 | July = 7 | August = 8 | September = 9 | October = 10 
+        | November = 11 | December = 12
 
-    type public Month(monthType:MonthType, year:Year) = 
-        member this.Year = year
-        member this.MonthType = monthType
+    type public Year = { AD : int; Leap : Boolean; dayCount : int }
 
-    and public Year(ad:int) =
-        member this.AD = ad
-        member public this.Months = Enum.GetValues(typeof<MonthType>).Cast().ToArray()
-                                    |> Array.map(fun n -> new Month (n, this))
-        member public this.Leap = 
-            if this.AD % 400 = 0 then true
-            else if this.AD % 100 = 0 then false
-            else if this.AD % 4 = 0 then true
-            else false
-        member this.DaysCount = if this.Leap then 366 else 365
+    type public Date = { Year : Year; Month : Month; Day : int }
 
-    let monthsWith31Days = [  MonthType.January; 
-                              MonthType.March;
-                              MonthType.May;
-                              MonthType.July;
-                              MonthType.August;
-                              MonthType.October;
-                              MonthType.December ]
+    let monthsWith31Days = [  Month.January; 
+                              Month.March;
+                              Month.May;
+                              Month.July;
+                              Month.August;
+                              Month.October;
+                              Month.December ]
 
-    let GetDaysCount (month:Month) = 
-        if (monthsWith31Days.Contains(month.MonthType)) then 31
-        else if (month.MonthType = MonthType.February)
-            then (if month.Year.Leap then 29 else 28)
+    let allMonths = Enum.GetValues(typeof<Month>).Cast<Month>();
+
+    let toYear ad =
+        let leap = ad % 4 = 0 && (not (ad % 100 = 0) || ad % 400 = 0)
+        let dayCount = if leap then 366 else 365
+        { AD = ad; Leap = leap; dayCount = dayCount }
+
+    let dayCount year month = 
+        if monthsWith31Days.Contains month then 31
+        else if month = Month.February then if year.Leap then 29 else 28
         else 30
 
-    type public Date (day:int, month:Month, year: Year) =
-        member this.Year = year
-        member this.Month = month
-        member this.Day = day
+    let daysRemainingInMonth date = dayCount date.Year date.Month - date.Day + 1    
 
-    let GetDaysRemainingInMonth (date:Date) = GetDaysCount date.Month - date.Day + 1    
+    let daysRemainingInYear date = daysRemainingInMonth date + 
+                                 (allMonths |> Seq.filter((<) date.Month)
+                                 |> Seq.map(dayCount date.Year) |> Seq.sum)
 
-    let GetDaysRemainingInYear (date:Date) = GetDaysRemainingInMonth(date) + 
-                                                       (date.Year.Months 
-                                                       |> Array.filter(fun p -> (int)p.MonthType > (int) date.Month.MonthType)
-                                                       |> Array.map(GetDaysCount)
-                                                       |> Array.sum)
+    let daysOverInYear date = date.Year.dayCount - daysRemainingInYear date + 1
 
-    let GetDaysOverInYear (date:Date) = date.Year.DaysCount - GetDaysRemainingInYear(date) + 1
+    let daysBetween y1 y2 = [y1.AD + 1 .. y2.AD - 1] 
+                            |> List.map (fun p -> (toYear p).dayCount)
+                            |> List.sum 
 
-    let GetDaysBetweenTwoYears(year1:Year, year2:Year) = [year1.AD .. year2.AD - 1] |>  List.map(fun p -> (new Year(p)).DaysCount) |> List.sum 
-
-    let GetDiffInternal (firstDate:Date, secondDate:Date) = 
-            if secondDate.Year.AD <> firstDate.Year.AD  
-            then GetDaysRemainingInYear(firstDate) + GetDaysBetweenTwoYears(firstDate.Year, secondDate.Year) + GetDaysOverInYear(secondDate) 
-            else (if (int)secondDate.Month.MonthType <> (int)firstDate.Month.MonthType 
-                  then GetDaysRemainingInYear(firstDate) - 
-                       GetDaysRemainingInYear(secondDate) + 1 // to include both starting and ending dates
-                  else secondDate.Day - firstDate.Day + 1)
+    let diffInternal d1 d2 = 
+        if d2.Year.AD <> d1.Year.AD then 
+           daysRemainingInYear d1 + daysBetween d1.Year d2.Year + daysOverInYear d2 
+        else if d2.Month <> d1.Month then 
+           daysRemainingInYear d1 - daysRemainingInYear d2 + 1
+        else d2.Day - d1.Day + 1
         
-    let public GetDiff (firstDate:Date, secondDate:Date) = 
-            if firstDate.Year.AD > secondDate.Year.AD ||
-               (firstDate.Year.AD = secondDate.Year.AD && (int)firstDate.Month.MonthType > (int)secondDate.Month.MonthType) ||
-               (firstDate.Year.AD = secondDate.Year.AD && (int)firstDate.Month.MonthType = (int)secondDate.Month.MonthType && firstDate.Day > secondDate.Day)
-            then GetDiffInternal(secondDate, firstDate) //reverse the dates
-            else GetDiffInternal(firstDate, secondDate)
+    let toInt dt = sprintf "%i%i%i" dt.Year.AD ((int)dt.Month) dt.Day |> Int32.Parse
 
-    let fromStringToDate(date:String) =
-       try
-          let splitted = date.Split('-');
-          let year = new Year(Int32.Parse(splitted.[2]))
-          let month =
-             let monthInt = Int32.Parse(splitted.[1])
-             if monthInt > 12 then raise(System.ArgumentException())
-             else new Month(enum<MonthType> (monthInt), year)
-          let day = 
-             let dayInt = Int32.Parse(splitted.[0])
-             if dayInt > GetDaysCount month then raise(System.ArgumentException())
-             else dayInt
-          new Date(day, month, year)
-       with
-          | ex -> raise(System.ArgumentException("Input not formatted correctly"))
+    let public dateDiff d1 d2 = 
+        if toInt d1 > toInt d2 then diffInternal d2 d1 else diffInternal d1 d2
+
+    let toDate(date:String) =
+        let splitted = date.Split('-') |> Array.map Int32.Parse
+        let year = toYear splitted.[2]
+        let month = enum<Month> splitted.[1]
+        let day =    
+           if splitted.[0] > dayCount year month then raise(System.FormatException())
+           else splitted.[0]
+        {Day = day; Month = month; Year = year}

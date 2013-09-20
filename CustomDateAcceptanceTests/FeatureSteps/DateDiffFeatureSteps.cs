@@ -15,7 +15,7 @@ namespace CustomDateTests
         [Given(@"I have a date (.*)")]
         public void GivenIHaveADate(string firstDate)
         {
-            CustomDate.CustomDate.Date date = CustomDate.CustomDate.fromStringToDate(firstDate);
+            CustomDate.CustomDate.Date date = CustomDate.CustomDate.toDate(firstDate);
             ScenarioContext.Current.Set(date);
         }
 
@@ -23,7 +23,7 @@ namespace CustomDateTests
         public void ThenTheDifferenceBetweenItAndAnotherDateShouldBe(string secondDate, int diff)
         {
             var date = ScenarioContext.Current.Get<CustomDate.CustomDate.Date>();
-            Assert.AreEqual(diff, CustomDate.CustomDate.GetDiff(date, CustomDate.CustomDate.fromStringToDate(secondDate)));
+            Assert.AreEqual(diff, CustomDate.CustomDate.dateDiff(date, CustomDate.CustomDate.toDate(secondDate)));
         }
     }
 }
