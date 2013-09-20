@@ -1,6 +1,5 @@
 ﻿namespace CustomDate
 module CustomDate =
-    open System.Collections.Generic
     open System.Linq
     open System
 
@@ -9,9 +8,9 @@ module CustomDate =
         | June = 6 | July = 7 | August = 8 | September = 9 | October = 10 
         | November = 11 | December = 12
 
-    type public Year = { AD : int; Leap : Boolean; dayCount : int }
+    type public Year = { AD : int; Leap : bool; dayCount : int }
 
-    type public Date = { Year : Year; Month : Month; Day : int }
+    type public Date = { Y : Year; M : Month; D : int }
 
     let monthsWith31Days = [  Month.January; 
                               Month.March;
@@ -29,39 +28,42 @@ module CustomDate =
         { AD = ad; Leap = leap; dayCount = dayCount }
 
     let dayCount year month = 
-        if monthsWith31Days.Contains month then 31
-        else if month = Month.February then if year.Leap then 29 else 28
-        else 30
+        match month with
+           | Month.February -> if year.Leap then 29 else 28
+           | _ -> if monthsWith31Days.Contains month then 31 else 30
 
-    let daysRemainingInMonth date = dayCount date.Year date.Month - date.Day + 1    
+    let daysRemInMonth date = dayCount date.Y date.M - date.D + 1    
 
-    let daysRemainingInYear date = daysRemainingInMonth date + 
-                                 (allMonths |> Seq.filter((<) date.Month)
-                                 |> Seq.map(dayCount date.Year) |> Seq.sum)
+    let daysRemInYear date = daysRemInMonth date + 
+                                 (allMonths |> Seq.filter((<) date.M)
+                                 |> Seq.map(dayCount date.Y) |> Seq.sum)
 
-    let daysOverInYear date = date.Year.dayCount - daysRemainingInYear date + 1
+    let daysOverInYear date = date.Y.dayCount - daysRemInYear date + 1
 
     let daysBetween y1 y2 = [y1.AD + 1 .. y2.AD - 1] 
                             |> List.map (fun p -> (toYear p).dayCount)
                             |> List.sum 
 
     let diffInternal d1 d2 = 
-        if d2.Year.AD <> d1.Year.AD then 
-           daysRemainingInYear d1 + daysBetween d1.Year d2.Year + daysOverInYear d2 
-        else if d2.Month <> d1.Month then 
-           daysRemainingInYear d1 - daysRemainingInYear d2 + 1
-        else d2.Day - d1.Day + 1
+        if d2.Y.AD <> d1.Y.AD then 
+           daysRemInYear d1 + daysBetween d1.Y d2.Y + daysOverInYear d2 
+        else if d2.M <> d1.M then 
+           daysRemInYear d1 - daysRemInYear d2 + 1
+        else d2.D - d1.D + 1
         
-    let toInt dt = sprintf "%i%i%i" dt.Year.AD ((int)dt.Month) dt.Day |> Int32.Parse
+    let toInt dt = sprintf "%i%i%i" dt.Y.AD ((int)dt.M) dt.D |> Int32.Parse
 
     let public dateDiff d1 d2 = 
         if toInt d1 > toInt d2 then diffInternal d2 d1 else diffInternal d1 d2
 
     let toDate(date:String) =
-        let splitted = date.Split('-') |> Array.map Int32.Parse
-        let year = toYear splitted.[2]
-        let month = enum<Month> splitted.[1]
-        let day =    
-           if splitted.[0] > dayCount year month then raise(System.FormatException())
-           else splitted.[0]
-        {Day = day; Month = month; Year = year}
+        try
+            let splitted = date.Split('-') |> Array.map Int32.Parse
+            let y = toYear splitted.[2]
+            let m = enum<Month> splitted.[1]
+            let d =    
+               if splitted.[0] > dayCount y m then raise(System.ArgumentException())
+               else splitted.[0]
+            {D = d; M = m; Y = y}
+        with
+            | ex -> raise(System.FormatException())
