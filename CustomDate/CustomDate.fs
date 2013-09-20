@@ -36,17 +36,15 @@ module CustomDate =
 
     let daysBetween y1 y2 = [y1 + 1 .. y2 - 1] |> List.map (dayCountYr) |> List.sum
 
-    let diffInternal d1 d2 = 
-        if d2.Y <> d1.Y then 
-           daysRemInYear d1 + daysBetween d1.Y d2.Y + daysOverInYear d2 
-        else if d2.M <> d1.M then 
-           daysRemInYear d1 - daysRemInYear d2 + 1
-        else d2.D - d1.D + 1
-        
     let toInt dt = sprintf "%i%i%i" dt.Y ((int)dt.M) dt.D |> Int32.Parse
 
-    let public dateDiff d1 d2 = 
-        if toInt d1 > toInt d2 then diffInternal d2 d1 else diffInternal d1 d2
+    let rec public dateDiff d1 d2 = 
+        if toInt d1 > toInt d2 then dateDiff d2 d1 
+        else if d2.Y > d1.Y then 
+           daysRemInYear d1 + daysBetween d1.Y d2.Y + daysOverInYear d2 
+        else if d2.M > d1.M then 
+           daysRemInYear d1 - daysRemInYear d2 + 1
+        else d2.D - d1.D + 1
 
     let toDate(date:String) =
         try
