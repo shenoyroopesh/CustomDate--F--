@@ -1,0 +1,38 @@
+#Can someone please explain why do we ignore below css?
+dispatchOfficeWeb/Stylesheets/jquery-ui-1.8.5.custom.css
+
+#Can someone please explain why do we ignore below path dlls?
+Penchant.dispatchOffice.Applications/Import/ImportConsole/WebImport/BestBuy.dll
+Penchant.dispatchOffice.Applications/Import/ImportConsole/WebImport/HDSurvey.dll
+Penchant.dispatchOffice.Applications/Import/ImportConsole/WebImport/Ikea.dll
+Penchant.dispatchOffice.Applications/Import/ImportConsole/WebImport/Lowes.dll
+
+**/bin/*
+**/obj/*
+**/_ReSharper.*
+**/*.suo
+**/*.user
+**/logs/*
+**/msbuild.log
+**/PrecompiledWeb/*
+TestResult.xml
+cpw.bat
+vnq
+TestResults/*
+PrecompiledWebService/*
+StageWeb/*
+StageWebService/*
+otherSetupFiles/*
+PrecompiledDataImporter/*
+StageDataImporter/*
+lib/log4net/*
+dispatchOfficeWeb/Images/map_markers - Copy/*
+PS.dispatchOffice.Services/log4net/*
+PS.dispatchOffice.WebServices/DispatchOfficeSolution/StageWebService/
+PS.dispatchOffice.WebServices/DispatchOfficeSolution/lib/EntLib/*
+PS.dispatchOffice.WebServices/DispatchOfficeSolution/lib/MSBuild/*
+revscripts/TSTMigrator/*
+doRest/PrecompiledDoRestWebService/*
+doRest/PrecompiledDoRestWebTest/*
+doRest/StageDoRestWebService/*
+doRest/StageDoRestWebTest/*
